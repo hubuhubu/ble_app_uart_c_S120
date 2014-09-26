@@ -6,6 +6,12 @@ Client example with 128 bit UUID service&amp;characteristics for S120
 It's based on the ble_app_hrs_c. The HRS service was replaced by the NUS (UART) service.
 The peer device (peripheral device) can be used conjunction with this example is the ble_app_uart available in SDK v6.0 and earlier. 
 
+Functionality:
+- Scan for and connect to a peripheral that advertise with the 128bit UUID NUS service
+- Do service discovery and notify the application if the NUS UUID service found
+- Enable RX CCCD for notification
+- Write a "dummy" every second after connected
+
 Be noted that the charactersitic's names and UUID were copied from the original ble_app_uart so that the 2 examples matched.
 It may not match with the description of the RX and TX characteristics (reversed)
 
