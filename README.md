@@ -4,7 +4,7 @@ ble_app_uart_c
 Client example with 128 bit UUID service&amp;characteristics for S120
 
 It's based on the ble_app_hrs_c. The HRS service was replaced by the NUS (UART) service.
-The peer device (peripheral device) can be used conjunction with this example is the ble_app_uart available in SDK v6.0 and earlier. 
+The peer device (peripheral device) can be used conjunction with this example is the ble_app_uart available in SDK v6.0 and earlier. An echoed example for the peer device is also included.
 
 Functionality:
 - Scan for and connect to a peripheral that advertise with the 128bit UUID NUS service
@@ -15,12 +15,13 @@ Functionality:
 Be noted that the charactersitic's names and UUID were copied from the original ble_app_uart so that the 2 examples matched.
 It may not match with the description of the RX and TX characteristics (reversed)
 
+
 Requirements
 
 
 nRF51 SDK version 6.1
 
-S110 v7.0 and above. 
+S120 v1.0 
 
 nRF51822 Development Kit version 2.1.0 or later
 
