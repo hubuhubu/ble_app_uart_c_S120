@@ -383,7 +383,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             {
                
 											
-                    if(!memcmp( nus_service_uuid,type_data.p_data,8))
+                    if(!memcmp( nus_service_uuid,type_data.p_data,16))
                     {
 											APPL_LOG("\t[APPL]: UUID matched\r\n");
                         // Stop scanning.
