@@ -362,7 +362,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
         {
             data_t adv_data;
             data_t type_data;
-						APPL_LOG("\t[APPL]: Catched an advertising packet, check for UUID match\r\n");
+						APPL_LOG("\t[APPL]: Caught an advertising packet, checking for UUID match\r\n");
             // Initialize advertisement report for parsing.
             adv_data.p_data = (uint8_t *)p_gap_evt->params.adv_report.data;
             adv_data.data_len = p_gap_evt->params.adv_report.dlen;
