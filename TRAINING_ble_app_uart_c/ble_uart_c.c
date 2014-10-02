@@ -162,8 +162,9 @@ static void db_discover_evt_handler(ble_db_discovery_evt_t * p_evt)
 
         for (i = 0; i < p_evt->params.discovered_db.char_count; i++)
         {
-            if (p_evt->params.discovered_db.charateristics[i].characteristic.uuid.uuid ==
-                BLE_UUID_NUS_RX_CHARACTERISTIC)
+            if ((p_evt->params.discovered_db.charateristics[i].characteristic.uuid.uuid == BLE_UUID_NUS_RX_CHARACTERISTIC)
+            	&&(p_evt->params.discovered_db.charateristics[i].characteristic.uuid.type==uart_uuid.type))
+                
             {
                 // Found Heart Rate characteristic. Store CCCD handle .
                 mp_ble_uart_c->RX_cccd_handle =
@@ -172,8 +173,8 @@ static void db_discover_evt_handler(ble_db_discovery_evt_t * p_evt)
                     p_evt->params.discovered_db.charateristics[i].characteristic.handle_value;
                
             }
-						if (p_evt->params.discovered_db.charateristics[i].characteristic.uuid.uuid ==
-                BLE_UUID_NUS_TX_CHARACTERISTIC)
+		if ((p_evt->params.discovered_db.charateristics[i].characteristic.uuid.uuid == BLE_UUID_NUS_TX_CHARACTERISTIC)
+			&&(p_evt->params.discovered_db.charateristics[i].characteristic.uuid.type==uart_uuid.type))
             {
                 // Found Heart Rate characteristic. Store CCCD handle .
                 mp_ble_uart_c->TX_handle      =
