@@ -574,13 +574,11 @@ static void uart_c_evt_handler(ble_uart_c_t * p_uart_c, ble_uart_c_evt_t * p_uar
 
         case BLE_UART_C_EVT_HRM_NOTIFICATION:
         {
-            p_uart_c_evt->params.uart.rx_data[p_uart_c_evt->params.uart.len]=0;
             for (uint32_t i = 0; i < p_uart_c_evt->params.uart.len; i++)
             {
                 while(app_uart_put(p_uart_c_evt->params.uart.rx_data[i]) != NRF_SUCCESS);
             }
-            while(app_uart_put('\n') != NRF_SUCCESS);
-
+            
             break;
         }
         default:
