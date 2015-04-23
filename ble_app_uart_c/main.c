@@ -158,7 +158,7 @@ static ret_code_t device_manager_event_handler(const dm_handle_t    * p_handle,
         case DM_EVT_CONNECTION:
         {   
             nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
-
+	    printf("Connected \r\n");
             m_dm_device_handle = (*p_handle);
 
             // Discover peer's services. 
@@ -574,13 +574,11 @@ static void uart_c_evt_handler(ble_uart_c_t * p_uart_c, ble_uart_c_evt_t * p_uar
 
         case BLE_UART_C_EVT_HRM_NOTIFICATION:
         {
-            p_uart_c_evt->params.uart.rx_data[p_uart_c_evt->params.uart.len]=0;
             for (uint32_t i = 0; i < p_uart_c_evt->params.uart.len; i++)
             {
                 while(app_uart_put(p_uart_c_evt->params.uart.rx_data[i]) != NRF_SUCCESS);
             }
-            while(app_uart_put('\n') != NRF_SUCCESS);
-
+            
             break;
         }
         default:
@@ -735,7 +733,7 @@ int main(void)
     db_discovery_init();
     uart_c_init();
     
-    printf("Start..\r\n");
+    printf("Scanning ...\r\n");
 	
     // Start scanning for peripherals and initiate connection
     // with devices that advertise Heart Rate UUID.
