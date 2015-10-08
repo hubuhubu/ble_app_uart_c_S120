@@ -310,6 +310,10 @@ static uint32_t cccd_configure(uint16_t conn_handle, uint16_t handle_cccd, bool 
 //}
  uint32_t ble_uart_c_write_string(ble_uart_c_t * p_ble_uart_c, const uint8_t * p_str, uint16_t p_str_len)
  {
+    if (p_ble_uart_c->conn_handle == BLE_CONN_HANDLE_INVALID)
+    {
+        return NRF_ERROR_INVALID_STATE;
+    }
     LOG("[uart_C]: Writing to characteristic Handle = %d, Connection Handle = %d\r\n",
         char_handle,conn_handle);
 
