@@ -9,9 +9,9 @@
 
 /** @example Board/nrf6310/s120/experimental/ble_app_uart_c/main.c
  *
- * @brief BLE Heart Rate Collector application main file.
+ * @brief BLE Nordic UART service (NUS) client application main file.
  *
- * This file contains the source code for a sample heart rate collector.
+ * This file contains the source code for a sample Nordic UART service client.
  */
 
 #include <stdint.h>
@@ -197,7 +197,7 @@ static ret_code_t device_manager_event_handler(const dm_handle_t    * p_handle,
         }
         case DM_EVT_SECURITY_SETUP_COMPLETE:
         {    
-             // Heart rate service discovered. Enable notification of Heart Rate Measurement.
+            // Nordic UART service discovered. Enable notification of RX channel.
             err_code = ble_uart_c_rx_notif_enable(&m_ble_uart_c);
             APP_ERROR_CHECK(err_code);
             break;
@@ -554,7 +554,7 @@ static void power_manage(void)
 }
 
 
-/**@brief Heart Rate Collector Handler.
+/**@brief Nordic UART Service (NUS) Client Event Handler.
  */
 static void uart_c_evt_handler(ble_uart_c_t * p_uart_c, ble_uart_c_evt_t * p_uart_c_evt)
 {
@@ -567,7 +567,7 @@ static void uart_c_evt_handler(ble_uart_c_t * p_uart_c, ble_uart_c_evt_t * p_uar
             err_code = dm_security_setup_req(&m_dm_device_handle);
             APP_ERROR_CHECK(err_code);
             
-            // Heart rate service discovered. Enable notification of Heart Rate Measurement.
+            // Nordic UART service discovered. Enable notification of RX data channel.
             err_code = ble_uart_c_rx_notif_enable(p_uart_c);
             APP_ERROR_CHECK(err_code);
             break;
@@ -736,7 +736,7 @@ int main(void)
     printf("Scanning ...\r\n");
 	
     // Start scanning for peripherals and initiate connection
-    // with devices that advertise Heart Rate UUID.
+    // with devices that advertise NUS UUID.
     scan_start();
 
     for (;;)

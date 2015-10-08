@@ -9,22 +9,14 @@
 
 /**@file
  *
- * @defgroup ble_sdk_srv_uart_c   Heart Rate Service Client
+ * @defgroup ble_sdk_srv_uart_c   Nordic UART Service (NUS) Client
  * @{
  * @ingroup  ble_sdk_srv
- * @brief    Heart Rate Service Client module.
+ * @brief    Nordic UART Service (NUS) Client module.
  *
- * @details  This module contains the APIs and types exposed by the Heart Rate Service Client
+ * @details  This module contains the APIs and types exposed by the Nordic UART Service (NUS) Client
  *           module. These APIs and types can be used by the application to perform discovery of
- *           Heart Rate Service at the peer and interact with it.
- *
- * @warning  Currently this module only has support for Heart Rate Measurement characteristic. This
- *           means that it will be able to enable notification of the characteristic at the peer and
- *           be able to receive Heart Rate Measurement notifications from the peer. It does not
- *           support the Body Sensor Location and the Heart Rate Control Point characteristics.
- *           When a Heart Rate Measurement is received, this module will decode only the
- *           Heart Rate Measurement Value (both 8 bit and 16 bit) field from it and provide it to
- *           the application.
+ *           Nordic UART Service (NUS) at the peer and interact with it.
  *
  * @note     The application must propagate BLE stack events to this module by calling
  *           ble_uart_c_on_ble_evt().
@@ -50,7 +42,7 @@
 /**@brief uart Client event type. */
 typedef enum
 {
-    BLE_UART_C_EVT_DISCOVERY_COMPLETE = 1,  /**< Event indicating that the Heart Rate Service has been discovered at the peer. */
+    BLE_UART_C_EVT_DISCOVERY_COMPLETE = 1,  /**< Event indicating that the Nordic UART Service (NUS) has been discovered at the peer. */
     BLE_UART_C_EVT_RX_DATA_NOTIFICATION     /**< Event indicating that a notification of the NUS RX data characteristic has been received from the peer. */
 } ble_uart_c_evt_type_t;
 
@@ -61,14 +53,14 @@ typedef enum
  * @{
  */
 
-/**@brief Structure containing the heart rate measurement received from the peer. */
+/**@brief Structure containing the NUS RX data received from the peer. */
 typedef struct
 {
     uint8_t rx_data[20];  /**< RX Value. */
     uint8_t len; 
 } ble_uart_t;
 
-/**@brief Heart Rate Event structure. */
+/**@brief NUS Event structure. */
 typedef struct
 {
     ble_uart_c_evt_type_t evt_type;  /**< Type of the event. */
