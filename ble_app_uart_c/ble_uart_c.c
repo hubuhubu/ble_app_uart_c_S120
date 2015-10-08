@@ -315,7 +315,7 @@ static uint32_t cccd_configure(uint16_t conn_handle, uint16_t handle_cccd, bool 
         return NRF_ERROR_INVALID_STATE;
     }
     LOG("[uart_C]: Writing to characteristic Handle = %d, Connection Handle = %d\r\n",
-        char_handle,conn_handle);
+        p_ble_uart_c->TX_handle,p_ble_uart_c->conn_handle);
 
     tx_message_t * p_msg;
    
