@@ -26,8 +26,6 @@
 
 #define LOG                    app_trace_log         /**< Debug logger macro that will be used in this file to do logging of important information over UART. */
 
-#define HRM_FLAG_MASK_HR_16BIT (0x01 << 0)           /**< Bit mask used to extract the type of heart rate value. This is used to find if the received heart rate is a 16 bit value or an 8 bit value. */
-
 #define TX_BUFFER_MASK         0x07                  /**< TX Buffer mask, must be a mask of continuous zeroes, followed by continuous sequence of ones: 000...111. */
 #define TX_BUFFER_SIZE         (TX_BUFFER_MASK + 1)  /**< Size of send buffer, which is 1 higher than the mask. */
 
@@ -116,21 +114,20 @@ static void on_write_rsp(ble_uart_c_t * p_ble_uart_c, const ble_evt_t * p_ble_ev
 /**@brief     Function for handling Handle Value Notification received from the SoftDevice.
  *
  * @details   This function will uses the Handle Value Notification received from the SoftDevice
- *            and checks if it is a notification of the heart rate measurement from the peer. If
- *            it is, this function will decode the heart rate measurement and send it to the
- *            application.
+ *            and checks if it is a notification of the NUS RX data from the peer. If it is,
+ *            this function will send the RX data to the application.
  *
- * @param[in] p_ble_uart_c Pointer to the Heart Rate Client structure.
+ * @param[in] p_ble_uart_c Pointer to the NUS Client structure.
  * @param[in] p_ble_evt   Pointer to the BLE event received.
  */
 static void on_hvx(ble_uart_c_t * p_ble_uart_c, const ble_evt_t * p_ble_evt)
 {
-    // Check if this is a heart rate notification.
+    // Check if this is an RX data notification.
     if (p_ble_evt->evt.gattc_evt.params.hvx.handle == p_ble_uart_c->RX_handle)
     {
         ble_uart_c_evt_t ble_uart_c_evt;
 
-        ble_uart_c_evt.evt_type = BLE_UART_C_EVT_HRM_NOTIFICATION;
+        ble_uart_c_evt.evt_type = BLE_UART_C_EVT_RX_DATA_NOTIFICATION;
 				memcpy(ble_uart_c_evt.params.uart.rx_data,p_ble_evt->evt.gattc_evt.params.hvx.data,p_ble_evt->evt.gattc_evt.params.hvx.len);
 				ble_uart_c_evt.params.uart.len = p_ble_evt->evt.gattc_evt.params.hvx.len;
         p_ble_uart_c->evt_handler(p_ble_uart_c, &ble_uart_c_evt);
@@ -141,8 +138,8 @@ static void on_hvx(ble_uart_c_t * p_ble_uart_c, const ble_evt_t * p_ble_evt)
 /**@brief     Function for handling events from the database discovery module.
  *
  * @details   This function will handle an event from the database discovery module, and determine
- *            if it relates to the discovery of heart rate service at the peer. If so, it will
- *            call the application's event handler indicating that the heart rate service has been
+ *            if it relates to the discovery of nordic uart service at the peer. If so, it will
+ *            call the application's event handler indicating that the nordic uart service has been
  *            discovered at the peer. It also populates the event with the service related
  *            information before providing it to the application.
  *
@@ -151,14 +148,14 @@ static void on_hvx(ble_uart_c_t * p_ble_uart_c, const ble_evt_t * p_ble_evt)
  */
 static void db_discover_evt_handler(ble_db_discovery_evt_t * p_evt)
 {
-    // Check if the Heart Rate Service was discovered.
+    // Check if the Nordic UART Service was discovered.
     if (p_evt->evt_type == BLE_DB_DISCOVERY_COMPLETE &&
         p_evt->params.discovered_db.srv_uuid.uuid == BLE_UUID_NUS_SERVICE &&
         p_evt->params.discovered_db.srv_uuid.type == uart_uuid.type)
     {
         mp_ble_uart_c->conn_handle = p_evt->conn_handle;
 
-        // Find the CCCD Handle of the Heart Rate Measurement characteristic.
+        // Find the CCCD Handles of the TX/RX data characteristics.
         uint32_t i;
 
         for (i = 0; i < p_evt->params.discovered_db.char_count; i++)
@@ -167,7 +164,7 @@ static void db_discover_evt_handler(ble_db_discovery_evt_t * p_evt)
             	&&(p_evt->params.discovered_db.charateristics[i].characteristic.uuid.type==uart_uuid.type))
                 
             {
-                // Found Heart Rate characteristic. Store CCCD handle .
+                // Found RX data characteristic. Store CCCD handle .
                 mp_ble_uart_c->RX_cccd_handle =
                     p_evt->params.discovered_db.charateristics[i].cccd_handle;
                 mp_ble_uart_c->RX_handle      =
@@ -177,7 +174,7 @@ static void db_discover_evt_handler(ble_db_discovery_evt_t * p_evt)
 		if ((p_evt->params.discovered_db.charateristics[i].characteristic.uuid.uuid == BLE_UUID_NUS_TX_CHARACTERISTIC)
 			&&(p_evt->params.discovered_db.charateristics[i].characteristic.uuid.type==uart_uuid.type))
             {
-                // Found Heart Rate characteristic. Store CCCD handle .
+                // Found TX data characteristic. Store CCCD handle .
                 mp_ble_uart_c->TX_handle      =
                     p_evt->params.discovered_db.charateristics[i].characteristic.handle_value;
                
@@ -185,11 +182,11 @@ static void db_discover_evt_handler(ble_db_discovery_evt_t * p_evt)
 						
         }
 
-        LOG("[uart_C]: Heart Rate Service discovered at peer.\r\n");
+        LOG("[uart_C]: Nordic UART service (NUS) discovered at peer.\r\n");
 
         ble_uart_c_evt_t evt;
 
-        evt.evt_type = BLE_uart_C_EVT_DISCOVERY_COMPLETE;
+        evt.evt_type = BLE_UART_C_EVT_DISCOVERY_COMPLETE;
 
         mp_ble_uart_c->evt_handler(mp_ble_uart_c, &evt);
     }
@@ -310,8 +307,12 @@ static uint32_t cccd_configure(uint16_t conn_handle, uint16_t handle_cccd, bool 
 //}
  uint32_t ble_uart_c_write_string(ble_uart_c_t * p_ble_uart_c, const uint8_t * p_str, uint16_t p_str_len)
  {
+    if (p_ble_uart_c->conn_handle == BLE_CONN_HANDLE_INVALID)
+    {
+        return NRF_ERROR_INVALID_STATE;
+    }
     LOG("[uart_C]: Writing to characteristic Handle = %d, Connection Handle = %d\r\n",
-        char_handle,conn_handle);
+        p_ble_uart_c->TX_handle,p_ble_uart_c->conn_handle);
 
     tx_message_t * p_msg;
    
