@@ -130,7 +130,7 @@ static void on_hvx(ble_uart_c_t * p_ble_uart_c, const ble_evt_t * p_ble_evt)
     {
         ble_uart_c_evt_t ble_uart_c_evt;
 
-        ble_uart_c_evt.evt_type = BLE_UART_C_EVT_HRM_NOTIFICATION;
+        ble_uart_c_evt.evt_type = BLE_UART_C_EVT_RX_DATA_NOTIFICATION;
 				memcpy(ble_uart_c_evt.params.uart.rx_data,p_ble_evt->evt.gattc_evt.params.hvx.data,p_ble_evt->evt.gattc_evt.params.hvx.len);
 				ble_uart_c_evt.params.uart.len = p_ble_evt->evt.gattc_evt.params.hvx.len;
         p_ble_uart_c->evt_handler(p_ble_uart_c, &ble_uart_c_evt);

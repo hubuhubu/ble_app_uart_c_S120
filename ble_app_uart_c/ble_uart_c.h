@@ -51,7 +51,7 @@
 typedef enum
 {
     BLE_UART_C_EVT_DISCOVERY_COMPLETE = 1,  /**< Event indicating that the Heart Rate Service has been discovered at the peer. */
-    BLE_UART_C_EVT_HRM_NOTIFICATION         /**< Event indicating that a notification of the Heart Rate Measurement characteristic has been received from the peer. */
+    BLE_UART_C_EVT_RX_DATA_NOTIFICATION     /**< Event indicating that a notification of the NUS RX data characteristic has been received from the peer. */
 } ble_uart_c_evt_type_t;
 
 /** @} */

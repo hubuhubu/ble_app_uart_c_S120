@@ -572,7 +572,7 @@ static void uart_c_evt_handler(ble_uart_c_t * p_uart_c, ble_uart_c_evt_t * p_uar
             APP_ERROR_CHECK(err_code);
             break;
 
-        case BLE_UART_C_EVT_HRM_NOTIFICATION:
+        case BLE_UART_C_EVT_RX_DATA_NOTIFICATION:
         {
             for (uint32_t i = 0; i < p_uart_c_evt->params.uart.len; i++)
             {
