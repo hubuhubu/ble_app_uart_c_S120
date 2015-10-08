@@ -562,7 +562,7 @@ static void uart_c_evt_handler(ble_uart_c_t * p_uart_c, ble_uart_c_evt_t * p_uar
 
     switch (p_uart_c_evt->evt_type)
     {
-        case BLE_uart_C_EVT_DISCOVERY_COMPLETE:
+        case BLE_UART_C_EVT_DISCOVERY_COMPLETE:
             // Initiate bonding.
             err_code = dm_security_setup_req(&m_dm_device_handle);
             APP_ERROR_CHECK(err_code);

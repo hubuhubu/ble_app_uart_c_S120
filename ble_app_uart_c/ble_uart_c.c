@@ -189,7 +189,7 @@ static void db_discover_evt_handler(ble_db_discovery_evt_t * p_evt)
 
         ble_uart_c_evt_t evt;
 
-        evt.evt_type = BLE_uart_C_EVT_DISCOVERY_COMPLETE;
+        evt.evt_type = BLE_UART_C_EVT_DISCOVERY_COMPLETE;
 
         mp_ble_uart_c->evt_handler(mp_ble_uart_c, &evt);
     }

@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef BLE_uart_C_H__
-#define BLE_uart_C_H__
+#ifndef BLE_UART_C_H__
+#define BLE_UART_C_H__
 #define BLE_UUID_NUS_SERVICE            0x0001                       /**< The UUID of the Nordic UART Service. */
 #define BLE_UUID_NUS_TX_CHARACTERISTIC  0x0002                       /**< The UUID of the TX Characteristic. */
 #define BLE_UUID_NUS_RX_CHARACTERISTIC  0x0003                       /**< The UUID of the RX Characteristic. */
@@ -50,7 +50,7 @@
 /**@brief uart Client event type. */
 typedef enum
 {
-    BLE_uart_C_EVT_DISCOVERY_COMPLETE = 1,  /**< Event indicating that the Heart Rate Service has been discovered at the peer. */
+    BLE_UART_C_EVT_DISCOVERY_COMPLETE = 1,  /**< Event indicating that the Heart Rate Service has been discovered at the peer. */
     BLE_UART_C_EVT_HRM_NOTIFICATION         /**< Event indicating that a notification of the Heart Rate Measurement characteristic has been received from the peer. */
 } ble_uart_c_evt_type_t;
 
@@ -186,7 +186,7 @@ uint32_t ble_uart_c_rx_notif_enable(ble_uart_c_t * p_ble_uart_c);
 
 /** @} */ // End tag for Function group.
 
-#endif // BLE_uart_C_H__
+#endif // BLE_UART_C_H__
 
 
 
